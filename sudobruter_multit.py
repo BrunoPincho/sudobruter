@@ -61,6 +61,8 @@ def main():
         for t in threads:
             t.join()
         
+        passwordQueue.queue.clear()
+        finishedFlag = 0
         print(f"[+] finished testing: {user}")
 
 if __name__ == "__main__":
